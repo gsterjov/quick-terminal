@@ -51,5 +51,9 @@ class Terminal (Gtk.ScrolledWindow):
 		self.add_with_viewport (self.terminal)
 		
 
+	def focus (self):
+		self.terminal.grab_focus()
+		
+
 	def __on_quit (self, terminal):
 		self.emit ("exited")

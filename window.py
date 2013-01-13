@@ -40,7 +40,7 @@ class Window (Gtk.Window):
 		self.notebook.set_show_tabs (False)
 		self.notebook.set_border_width (0)
 
-		self.add_terminal()
+		self.current_terminal = self.add_terminal()
 		self.add (self.notebook)
 
 		screen = self.get_screen()
@@ -73,8 +73,11 @@ class Window (Gtk.Window):
 			
 			term = self.add_terminal()
 			term.show_all()
+			self.current_terminal = term
 
 
+	def focus (self):
+		self.current_terminal.focus()
 
 
 	def __on_terminal_exited (self, terminal):
