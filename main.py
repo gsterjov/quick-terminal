@@ -18,7 +18,7 @@
 
 import signal
 
-import config
+from config import Config
 from gi.repository import Gtk, Keybinder
 from window import Window
 
@@ -32,7 +32,8 @@ def on_hotkey (hotkey, window):
 
 
 if __name__ == "__main__":
-	window = Window()
+	config = Config()
+	window = Window (config)
 
 	Keybinder.init()
 	Keybinder.bind (config.hotkey, on_hotkey, window)

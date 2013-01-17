@@ -18,15 +18,17 @@ import os
 #
 
 from gi.repository import Gtk, Vte, GLib, GObject
-import config
 
 
 class Terminal (Gtk.ScrolledWindow):
 	__gsignals__ = {
-		"exited": (GObject.SIGNAL_RUN_FIRST, None, ())
+		"exited": (GObject.SIGNAL_RUN_FIRST, None, ()),
+		"key-release": (GObject.SIGNAL_RUN_FIRST, None, (int, int)),
 	}
 
-	def __init__ (self):
+	def __init__ (self, config):
+		self.config = config
+
 		Gtk.ScrolledWindow.__init__ (self)
 
 		self.opacity = 80
@@ -42,6 +44,7 @@ class Terminal (Gtk.ScrolledWindow):
 			None,
 		)
 
+		self.terminal.connect ("key-release-event", self.__on_key_release)
 		self.terminal.connect ("child-exited", self.__on_quit)
 		self.terminal.set_scrollback_lines (config.scrollback)
 
@@ -54,6 +57,9 @@ class Terminal (Gtk.ScrolledWindow):
 	def focus (self):
 		self.terminal.grab_focus()
 		
+
+	def __on_key_release (self, terminal, event):
+		return self.emit ("key-release", event.keyval, event.state)
 
 	def __on_quit (self, terminal):
 		self.emit ("exited")

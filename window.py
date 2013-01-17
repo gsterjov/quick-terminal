@@ -16,13 +16,14 @@
 #    along with QuickTerminal.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 from terminal import Terminal
 
 
 class Window (Gtk.Window):
 
-	def __init__ (self):
+	def __init__ (self, config):
+		self.config = config
 		self.tabs = {}
 
 		Gtk.Window.__init__(self)
@@ -53,11 +54,13 @@ class Window (Gtk.Window):
 
 
 	def add_terminal (self):
-		terminal = Terminal()
+		terminal = Terminal (self.config)
+		terminal.connect ("key-release", self.__on_key_release)
 		terminal.connect ("exited", self.__on_terminal_exited)
 
 		number = self.notebook.append_page (terminal, None)
 		self.tabs[number] = terminal
+		self.notebook.set_current_page (number)
 
 		return terminal
 
@@ -78,6 +81,21 @@ class Window (Gtk.Window):
 
 	def focus (self):
 		self.current_terminal.focus()
+		
+
+	def __on_key_release (self, terminal, keyval, state):
+		key, mods = self.config.shortcuts["new_tab"]
+
+		# ignore numlock
+		mods |= Gdk.ModifierType.MOD2_MASK
+		state |= Gdk.ModifierType.MOD2_MASK
+
+		if key == keyval and mods == state:
+			self.add_terminal()
+			self.show_all()
+			return False
+
+		return True
 
 
 	def __on_terminal_exited (self, terminal):

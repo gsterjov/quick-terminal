@@ -16,6 +16,15 @@
 #    along with QuickTerminal.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-hotkey = "grave"
-opacity = 80
-scrollback = 5000
+from gi.repository import Gtk
+
+
+class Config (object):
+
+	hotkey = "grave"
+	opacity = 80
+	scrollback = 5000
+
+	shortcuts = {
+		"new_tab": Gtk.accelerator_parse ("<Ctrl>t")
+	}
