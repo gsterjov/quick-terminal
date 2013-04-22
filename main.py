@@ -28,7 +28,6 @@ def on_hotkey (hotkey, window):
 		window.hide()
 	else:
 		window.show_all()
-		window.focus()
 
 
 if __name__ == "__main__":

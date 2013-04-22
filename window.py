@@ -28,6 +28,7 @@ class Window (Gtk.Window):
 
 		Gtk.Window.__init__(self)
 		self.connect ("delete-event", Gtk.main_quit)
+		self.connect ("activate-focus", self.__on_window_focused)
 
 		self.set_keep_above (True)
 		self.set_skip_taskbar_hint (True)
@@ -79,10 +80,6 @@ class Window (Gtk.Window):
 			self.current_terminal = term
 
 
-	def focus (self):
-		self.current_terminal.focus()
-		
-
 	def __on_key_release (self, terminal, keyval, state):
 		key, mods = self.config.shortcuts["new_tab"]
 
@@ -100,3 +97,7 @@ class Window (Gtk.Window):
 
 	def __on_terminal_exited (self, terminal):
 		self.remove_terminal (terminal)
+
+
+	def __on_window_focused (self, window, data):
+		self.current_terminal.focus()
